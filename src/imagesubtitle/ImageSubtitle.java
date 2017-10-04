@@ -32,7 +32,7 @@ static BufferedImage bi;
         
         try {
             //Randomly choose image from directory
-            final File dir = new File("<PATH TO FILES>");
+            final File dir = new File("C:/Users/aaf8553/Desktop/ww2");
             File[] files = dir.listFiles();
             Random rand = new Random();
             File f = files[rand.nextInt(files.length)];
@@ -48,7 +48,7 @@ static BufferedImage bi;
         
 
         //Message
-        String message = "\"Hello I hope you can make it to the party man I am tired its awful how many people are      i am sorry  hi hi hi hi ih HOOOO hoho\" ";
+        String message = "\"Test text HELLO NICHOLAS\" ";
         
         //Breaks message into words and keeps words together on new lines with wrapText class
         String ParsedMessage = wrapText(bi.getWidth()/11, message).replaceAll("  +"," ").trim();
