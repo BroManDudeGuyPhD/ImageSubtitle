@@ -21,10 +21,10 @@ import javax.swing.JPanel;
  * @author BroManDudeGuyPhD
  */
 public class ImageSubtitle {
-
+static BufferedImage bi;
     
     public static void main(String[] args) {
-        BufferedImage bi = null;
+        bi = null;
         
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -32,7 +32,7 @@ public class ImageSubtitle {
         
         try {
             //Randomly choose image from directory
-            final File dir = new File("<Path To Images>");
+            final File dir = new File("<PATH TO FILES>");
             File[] files = dir.listFiles();
             Random rand = new Random();
             File f = files[rand.nextInt(files.length)];
@@ -45,20 +45,20 @@ public class ImageSubtitle {
 
         
         //Size of Displayed Image
-        BufferedImage resizedImage = resize(bi, 300, 300);
+        
 
         //Message
-        String message = "Hello I hope you can make it to the party man I am tired its awful how many people are      i am sorry                                 ";
+        String message = "\"Hello I hope you can make it to the party man I am tired its awful how many people are      i am sorry  hi hi hi hi ih HOOOO hoho\" ";
         
-        //Breaks message into lines
-        String ParsedMessage = message.replaceAll("(.{25})", "$1\n").replaceAll("  +"," ").trim();
+        //Breaks message into words and keeps words together on new lines with wrapText class
+        String ParsedMessage = wrapText(bi.getWidth()/11, message).replaceAll("  +"," ").trim();
         
         //Breaks lines int array
         String [] lines = ParsedMessage.split("\n");
         
         
         //Adds white space for longer messages
-        final BufferedImage textRenderedImage = drawTextOnImage(ParsedMessage, resizedImage, 30*lines.length, lines);
+        final BufferedImage textRenderedImage = drawTextOnImage(ParsedMessage, bi, 30*lines.length, lines);
         
         JPanel p = new JPanel() {
             protected void paintComponent(Graphics grphcs) {
@@ -81,39 +81,70 @@ public class ImageSubtitle {
 
     }
     
+    public static String wrapText(int textviewWidth, String message) {
+
+        String temp = "";
+        String sentence = "";
+
+        String[] array = message.split(" "); // split by space
+
+        for (String word : array) {
+
+            if ((temp.length() + word.length()) < textviewWidth) {  // create a temp variable and check if length with new word exceeds textview width.
+
+                temp += " "+word;
+
+            } else {
+                sentence += temp+"\n"; // add new line character
+                temp = word;
+            }
+
+        }
+
+        return (sentence.replaceFirst(" ", "")+temp);
+
+    }
+    
     private static BufferedImage drawTextOnImage(String text, BufferedImage image, int space, String[] lines) {
-        BufferedImage bi = new BufferedImage(image.getWidth(), image.getHeight() + space, BufferedImage.TRANSLUCENT);
-        Graphics2D g2d = (Graphics2D) bi.createGraphics();
+        BufferedImage Image = new BufferedImage(image.getWidth(), image.getHeight() + space, BufferedImage.TRANSLUCENT);
+        Graphics2D g2d = (Graphics2D) Image.createGraphics();
         g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
         g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
         g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON));
-
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2d.drawImage(image, 0, 0, null);
-
+        
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Calibri", Font.BOLD, 25));
         FontMetrics fm = g2d.getFontMetrics();
         int lineHeight = g2d.getFontMetrics().getHeight();
 
         for (int lineCount = 0; lineCount < lines.length; lineCount++) { //lines from above
-            int xPos = 15;
-            int yPos = 320 + lineCount * lineHeight;
+            int xPos = 10;
+            int yPos = Image.getHeight()-space+20 + lineCount * lineHeight;
             String line = lines[lineCount];
             g2d.drawString(line, xPos, yPos);
+            
         }
         g2d.dispose();
 
-        return bi;
+        saveImageActionPerformed(Image);
+        return Image;
+        
     }
+    
+    private static void saveImageActionPerformed(BufferedImage image) {
+     
+      
+         File saveFile = new File("C:/Users/aaf8553/Desktop/ww2/tempImage.png");
+         try {
+            ImageIO.write(image, "png", saveFile);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      
+   }
 
-    public static BufferedImage resize(BufferedImage image, int width, int height) {
-        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
-        Graphics2D g2d = (Graphics2D) bi.createGraphics();
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
-        g2d.drawImage(image, 0, 0, width, height, null);
-        g2d.dispose();
-        return bi;
-    }
+    
     
 }
