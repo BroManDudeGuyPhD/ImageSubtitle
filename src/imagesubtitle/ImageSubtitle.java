@@ -48,7 +48,7 @@ static BufferedImage bi;
         
 
         //Message
-        String message = "\"Test text HELLO NICHOLAS\" ";
+        String message = "\"Hello I hope you can make it to the party man I am tired its awful how many people are      i am sorry  hi hi hi hi ih HOOOO hoho\" ";
         
         //Breaks message into words and keeps words together on new lines with wrapText class
         String ParsedMessage = wrapText(bi.getWidth()/11, message).replaceAll("  +"," ").trim();
